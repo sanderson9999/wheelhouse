@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wheelhouse — Infoshop &amp; Community Space, SLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=IBM+Plex+Mono:wght@400;600&family=Averia+Serif+Libre:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #1a1a1a; /* instant fallback color */
+      color: #D9F2D0;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* LQIP: tiny blurred placeholder, shows instantly */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      /* Replace the base64 below with output from step in README comment */
+      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScAAAAAElFTkSuQmCC') center / cover no-repeat;
+      filter: blur(12px);
+      transform: scale(1.08);
+      z-index: -2;
+      transition: opacity 0.6s ease;
+    }
+
+    /* Full background image, fades in on load */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url('images/background.png') center / cover no-repeat;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    body.bg-loaded::after  { opacity: 1; }
+    body.bg-loaded::before { opacity: 0; }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ── Placeholders ── */
+    .placeholder {
+      background: #d0d0d0;
+      border: 2px solid #c0392b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: #555;
+      text-align: center;
+    }
+
+    /* ── Buttons ── */
+    .btn-fill {
+      display: inline-block;
+      background: #FF0066;
+      color: #ffffff;
+      border: 2px solid #FF0066;
+      padding: 0.5rem 1.8rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      cursor: pointer;
+      transform: skewX(-15deg);
+    }
+    .btn-fill span {
+      display: inline-block;
+      transform: skewX(15deg);
+    }
+    .btn-fill:hover { background: #cc0052; border-color: #cc0052; }
+
+    /* ── Instagram icon link ── */
+    .insta-link {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .insta-link img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      display: block;
+    }
+    .insta-link:hover { opacity: 0.75; }
+
+    /* ── Images ── */
+    img {
+      width: 100%;
+      display: block;
+    }
+
+    /* ══════════════════════════════
+       1. HEADER
+    ══════════════════════════════ */
+    .site-header {
+      padding: 2rem 0 1.5rem;
+    }
+    .site-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .header-logo {
+      width: 60px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+    .header-center {
+      flex: 1;
+      text-align: center;
+    }
+    .site-header h1 {
+      font-family: "Orbitron", sans-serif;
+      font-size: 3.9rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #FF0066;
+    }
+    .header-sub {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      margin-top: 0.15rem;
+      color: #FF0066;
+    }
+
+    /* ══════════════════════════════
+       2. ABOUT
+    ══════════════════════════════ */
+    .section-about {
+      padding: 2.5rem 0 1.5rem;
+      text-align: center;
+    }
+    .section-about p {
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    /* ══════════════════════════════
+       3. ADDRESS & HOURS
+    ══════════════════════════════ */
+    .section-address {
+      padding: 0 0 2rem;
+      text-align: center;
+    }
+    .section-address p {
+      font-size: 0.9rem;
+    }
+    .section-address p strong,
+    .footer-address strong {
+      color: #FF0066;
+    }
+
+    /* ══════════════════════════════
+       4. SUPPORT ROW
+    ══════════════════════════════ */
+    .section-support {
+      padding: 1.2rem 0;
+    }
+    .section-support .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .section-support p {
+      font-size: 0.95rem;
+      flex: 1;
+    }
+
+    /* ══════════════════════════════
+       5. CONTACT / INSTAGRAM ROW
+    ══════════════════════════════ */
+    .section-contact {
+      padding: 1rem 0;
+    }
+    .section-contact .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .section-contact p {
+      font-size: 0.9rem;
+      flex: 1;
+    }
+    .section-contact a.email {
+      font-weight: 600;
+      color: #FF0066;
+    }
+
+    /* ══════════════════════════════
+       6. TWO-COLUMN: Partners / Library
+    ══════════════════════════════ */
+    .section-two-col {
+      padding: 2.5rem 0;
+    }
+    .two-col {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+    .two-col > .col {
+      flex: 1;
+      min-width: 0;
+    }
+    .col h2 {
+      font-family: "Averia Serif Libre", serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 1rem 0 0.6rem;
+      letter-spacing: 0.01em;
+      color: #FF0066;
+    }
+    .col p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* Partners list */
+    .partner-list {
+      list-style: none;
+      margin-top: 0.5rem;
+    }
+    .partner-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.35rem 0;
+      font-size: 0.9rem;
+    }
+    .partner-logo {
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+    .header-logo-img {
+      width: 270px;
+      height: 180px;
+      object-fit: contain;
+    }
+
+    /* ══════════════════════════════
+       7. VENDORS + UPCOMING EVENTS
+    ══════════════════════════════ */
+    .section-vendors-events {
+      padding: 2.5rem 0;
+    }
+    .vendors-col h2,
+    .events-col h2 {
+      font-family: "Averia Serif Libre", serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.01em;
+      color: #FF0066;
+    }
+    .vendors-col .btn-fill {
+      margin-bottom: 1rem;
+    }
+    .vendor-list {
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .partner-list a,
+    .vendor-list a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .partner-list a:hover,
+    .vendor-list a:hover {
+      text-decoration: underline;
+    }
+    .event-placeholder {
+      width: 100%;
+      height: 200px;
+    }
+
+    /* ══════════════════════════════
+       8. FOOTER
+    ══════════════════════════════ */
+    .site-footer {
+      padding: 1.5rem 0;
+    }
+    .site-footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .footer-img {
+      width: 320px;
+      height: 320px;
+      flex-shrink: 0;
+    }
+    .footer-address {
+      font-size: 0.85rem;
+      text-align: center;
+      flex: 1;
+    }
+
+    /* ── Lightbox ── */
+    .lightbox-trigger {
+      cursor: zoom-in;
+    }
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+    #lightbox.open {
+      display: flex;
+    }
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      width: auto;
+      display: block;
+      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .site-header h1 { font-size: 1.8rem; }
+      .two-col,
+      .section-support .container,
+      .section-contact .container,
+      .site-footer .container { flex-direction: column; gap: 1rem; }
+      .section-support .container,
+      .section-contact .container { align-items: flex-start; }
+      .site-footer .container { align-items: center; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. HEADER -->
+  <header class="site-header">
+    <div class="container">
+      <img src="images/wheelhouse-logo-white.png" alt="Wheelhouse logo" class="header-logo-img">
+      <div class="header-center">
+        <h1>Wheelhouse</h1>
+        <p class="header-sub">SALT LAKE CITY</p>
+      </div>
+      <img src="images/wheelhouse-logo-white.png" alt="Wheelhouse logo" class="header-logo-img">
+    </div>
+  </header>
+
+  <!-- 2. ABOUT -->
+  <section class="section-about">
+    <div class="container">
+      <p>Wheelhouse is an infoshop and radical community space in downtown Salt Lake City. We offer a lending library of 800+ radical books, local artist shop and gallery, bookstore, and reservable event space! Join us for film screenings, talks, organizing, and more.</p>
+    </div>
+  </section>
+
+  <!-- 3. ADDRESS & HOURS -->
+  <section class="section-address">
+    <div class="container">
+      <p><strong>451 E Broadway, Salt Lake City, Utah</strong></p>
+      <p>Thur–Sun, 12–7pm</p>
+    </div>
+  </section>
+
+  <!-- 4. SUPPORT ROW -->
+  <section class="section-support">
+    <div class="container">
+      <p>We ask our friends and community to support Wheelhouse with a small monthly subscription &rarr;</p>
+      <a href="https://ko-fi.com/wheelhouse/tiers?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAcGRvZgJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAaex9fFMsczOsBAytQ9pAbMJU8gJVg59YXexUQywgB4lzbrYjtjKb4yftmSkCg_aem_7DLxBDrU-OzO8J0pGd-LVw" target="_blank" rel="noopener" class="btn-fill"><span>SUPPORT</span></a>
+    </div>
+  </section>
+
+  <!-- 5. CONTACT / INSTAGRAM ROW -->
+  <section class="section-contact">
+    <div class="container">
+      <p>For information or to reserve an event, contact <a href="mailto:wheelhousearts@protonmail.com" class="email">wheelhousearts@protonmail.com</a></p>
+      <a href="https://www.instagram.com/wheelhouse_saltlake/" target="_blank" rel="noopener" class="insta-link" aria-label="Instagram">
+        <img src="images/insta-logo.png" alt="Instagram">
+      </a>
+    </div>
+  </section>
+
+  <!-- 6+7. STAGGERED GRID -->
+  <section class="section-two-col">
+    <div class="container">
+      <div class="two-col">
+
+        <!-- Left: Partners → Vendors -->
+        <div class="col vendors-col">
+          <img src="images/wheelhouse-space.png" alt="Wheelhouse space" class="lightbox-trigger">
+          <h2>Our partners</h2>
+          <ul class="partner-list">
+            <li>
+              <a href="https://www.instagram.com/foodnotbombssaltlakecity/" target="_blank" rel="noopener"><img src="images/food-not-bombs-logo.jpeg" alt="Food Not Bombs logo" class="partner-logo"></a>
+              <a href="https://www.instagram.com/foodnotbombssaltlakecity/" target="_blank" rel="noopener"><strong>Food Not Bombs Salt Lake City</strong></a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/slc.mutualaid/" target="_blank" rel="noopener"><img src="images/slc-mutual-aid-logo.jpeg" alt="Salt Lake Community Mutual Aid logo" class="partner-logo"></a>
+              <a href="https://www.instagram.com/slc.mutualaid/" target="_blank" rel="noopener"><strong>Salt Lake Community Mutual Aid</strong></a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/westside_brownberets_slv/" target="_blank" rel="noopener"><img src="images/brown-berets-logo.jpeg" alt="Westside Brown Berets logo" class="partner-logo"></a>
+              <a href="https://www.instagram.com/westside_brownberets_slv/" target="_blank" rel="noopener"><strong>Westside Brown Berets</strong></a>
+            </li>
+            <li>
+              <div style="width:60px;height:60px;background:#000000;flex-shrink:0;"></div>
+              <strong>ThriiStar Distro</strong>
+            </li>
+          </ul>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLScQuBom42ipZ7-mCtdB3EOEvy7KMcbaDNgpKJ25HQvV2ApeLg/viewform?usp=send_form" target="_blank" rel="noopener" class="btn-fill" style="margin-top:1.5rem;"><span>VENDOR APPLICATION</span></a>
+          <h2>Our vendors</h2>
+          <p class="vendor-list">
+            <a href="https://www.instagram.com/androbeanie/" target="_blank" rel="noopener"><strong>AndroBeanie</strong></a> |
+            <a href="https://www.instagram.com/einai_objective/" target="_blank" rel="noopener"><strong>Einai Objective</strong></a> |
+            <a href="https://www.instagram.com/faren.robin.massage.333/" target="_blank" rel="noopener"><strong>Faren Robin</strong></a> |
+            <a href="http://instagram.com/goblinstitch/" target="_blank" rel="noopener"><strong>Goblin Stitch</strong></a> |
+            <a href="https://www.instagram.com/headychilicrunch/" target="_blank" rel="noopener"><strong>Heady Chili Crunch</strong></a> |
+            <a href="https://www.instagram.com/hiro.tattoos/" target="_blank" rel="noopener"><strong>Hiro Robinson</strong></a> |
+            <a href="https://www.instagram.com/killermoth24/" target="_blank" rel="noopener"><strong>Killer Moth</strong></a> |
+            <a href="https://www.instagram.com/paisleyjensenstudios/" target="_blank" rel="noopener"><strong>Paisley Jensen Studios</strong></a> |
+            <a href="https://www.instagram.com/punktruckstop/" target="_blank" rel="noopener"><strong>Punk Truck Stop</strong></a> |
+            <a href="https://www.instagram.com/slcindigenoussolidarity/" target="_blank" rel="noopener"><strong>SLC Indigenous Solidarity</strong></a> |
+            <a href="https://www.instagram.com/surmise.cc/" target="_blank" rel="noopener"><strong>Surmise Press</strong></a> |
+            <a href="https://www.instagram.com/tatreezistance/" target="_blank" rel="noopener"><strong>Tatreezistance</strong></a> |
+            <a href="https://www.instagram.com/thursday.saturday/" target="_blank" rel="noopener"><strong>Thursday Saturday</strong></a>
+          </p>
+          <div style="text-align:center;margin-top:1.5rem;">
+            <a href="https://www.youtube.com/watch?v=8CG0Fl8TxZI" target="_blank" rel="noopener" style="display:inline-block;">
+              <img src="images/mirror.png" alt="Wheelhouse video" style="width:105px;display:block;">
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Library → Upcoming events -->
+        <div class="col events-col">
+          <img src="images/wheelhouse-library.png" alt="Wheelhouse library" class="lightbox-trigger">
+          <h2>Our library</h2>
+          <p>Our collection is a publicly available resource stewarded by the radical community of SLC since 2002. The Boing! Collective Lending Library of Radical Books comprises the bulk of the infoshop.</p>
+          <h2 style="margin-top:1.5rem;">Upcoming events</h2>
+          <iframe src="https://calendar.google.com/calendar/embed?src=285174f2061ae0ad6452d7ae2176249e4912ec13fe0e022fb1f34ee9b18263ee%40group.calendar.google.com&ctz=America%2FDenver&bgcolor=%23eeeeee" style="border:0;width:100%;height:600px;display:block;" frameborder="0" scrolling="no"></iframe>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <img src="images/wheelhouse-entrance.jpeg" alt="Wheelhouse entrance" class="footer-img lightbox-trigger" style="object-fit:cover;">
+      <p class="footer-address"><strong>451 E Broadway, Salt Lake City, Utah</strong><br>Thur–Sun, 12–7pm</p>
+      <a href="https://www.instagram.com/wheelhouse_saltlake/" target="_blank" rel="noopener" class="insta-link" aria-label="Instagram">
+        <img src="images/insta-logo.png" alt="Instagram">
+      </a>
+    </div>
+  </footer>
+
+  <!-- Lightbox overlay -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image enlarged">
+    <img src="" alt="">
+  </div>
+
+  <script>
+    /* Background LQIP fade-in */
+    const bgImg = new Image();
+    bgImg.onload = () => document.body.classList.add('bg-loaded');
+    bgImg.src = 'images/background.png';
+  </script>
+
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = lightbox.querySelector('img');
+
+    document.querySelectorAll('.lightbox-trigger').forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightbox.classList.add('open');
+      });
+    });
+
+    lightbox.addEventListener('click', () => {
+      lightbox.classList.remove('open');
+      lightboxImg.src = '';
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') lightbox.classList.remove('open');
+    });
+  </script>
+</body>
+</html>
